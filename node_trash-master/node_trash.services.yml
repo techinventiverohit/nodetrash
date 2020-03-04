@@ -1,0 +1,5 @@
+services:
+  node_trash.subscriber:
+    class: Drupal\node_trash\EventSubscriber\NodeTrashEventSubscriber
+    tags:
+      - { name: event_subscriber }

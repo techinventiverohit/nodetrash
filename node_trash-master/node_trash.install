@@ -1,0 +1,37 @@
+<?php
+
+use Drupal\Core\Field\BaseFieldDefinition;
+
+/**
+ * Implements hook_update().
+ */
+function node_trash_install() {
+  $fields_trash = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Trash'))
+      ->setDescription(t('Define node delete status'))
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE)->setDisplayConfigurable('form', TRUE);
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('trash', 'node', 'node', $fields_trash);
+
+  }
+
+//  return $fields;
+//  $field_manager = \Drupal::service('entity_field.manager');
+//  $field_storage_manager = \Drupal::service('field_storage_definition.listener');
+//  $definition = $field_manager->getFieldStorageDefinitions('node')['trash'];
+//  $field_storage_manager->onFieldStorageDefinitionCreate($definition);
+//}
+
+
+/**
+ * Implements hook_uninstall().
+ */
+function node_trash_uninstall() {
+  $trash_field_manager = \Drupal::entityDefinitionUpdateManager();
+  if ($trash_status = $trash_field_manager->getFieldStorageDefinition('trash', 'node')) {
+    $trash_field_manager->uninstallFieldStorageDefinition($trash_status);
+  }
+
+}
+

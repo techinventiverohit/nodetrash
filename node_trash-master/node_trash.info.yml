@@ -1,0 +1,10 @@
+name: 'Node Trash'
+type: module
+description: 'Before Delete node move to trash'
+# core: 8.x
+package: 'Development'
+
+# Information added by Drupal.org packaging script on 2019-07-12
+version: '8.x-1.1'
+core: '8.x'
+datestamp: 1562913188

@@ -1,0 +1,85 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\Core\Entity\EntityInterface;
+
+
+
+
+/**
+ * Implements hook_form_alter().
+ */
+function node_trash_form_alter(&$form, FormStateInterface $form_state, $form_id)
+{
+  if (!isset($form_state->getBuildInfo()['base_form_id']) ||  $form_state->getBuildInfo()['base_form_id'] != 'node_form') {
+    return;
+  }
+  $node = $form_state->getFormObject()->getEntity();
+  if (!$node->id()) {
+    return;
+  }
+  if (!isset($node->trash->value) || !$node->trash->value) {
+    $form['actions']['delete']['#access'] = FALSE;
+    $options = [
+      'attributes' => [
+        'class' => ['button ', 'button--danger'],
+      ],
+    ];
+    $url = Url::fromRoute('node_trash.form', ['node' => $node->id()], $options);
+    $link = [
+      '#type' => 'link',
+      '#url' => $url,
+      '#title' => t('Trash'),
+      '#weight' => 100,
+    ];
+
+    $form['actions']['trash'] = $link;
+
+  }
+  else {
+    $options = [
+      'attributes' => [
+        'class' => ['button ', 'button--danger'],
+      ],
+    ];
+    $url = Url::fromRoute('node_trash_restore.form', ['node' => $node->id()], $options);
+    $link = [
+      '#type' => 'link',
+      '#url' => $url,
+      '#title' => t('Restore'),
+      '#weight' => 100,
+    ];
+
+    $form['actions']['trash'] = $link;
+  }
+
+}
+
+/**
+ * @param EntityInterface $entity
+ */
+
+function node_trash_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  if ($entity->getEntityTypeId() != 'node') {
+    return;
+  }
+  if ((!isset($entity->trash->value) || !$entity->trash->value) && $entity->getEntityTypeId() == 'node') {
+    unset($operations['delete']);
+    $operations['trash'] = [
+      'title' => t('Trash'),
+      'url' => Url::fromRoute('node_trash.form', ['node' => $entity->id()]),
+      'weight' => 50,
+    ];
+  }
+  else {
+    $operations['restore'] = [
+      'title' => t('Restore'),
+      'url' => Url::fromRoute('node_trash_restore.form', ['node' => $entity->id()]),
+      'weight' => 50,
+    ];
+  }
+}
+
+
+

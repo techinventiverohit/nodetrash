@@ -1,0 +1,4 @@
+soft node delete access:
+  title: 'Access Soft Delete Node'
+  description: ''
+  restrict access: true

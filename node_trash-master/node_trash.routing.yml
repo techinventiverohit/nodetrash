@@ -1,0 +1,18 @@
+node_trash.form:
+  path: '/node/{node}/trash'
+  defaults:
+    _form: '\Drupal\node_trash\Form\NodeTrashConfirm'
+    _title: 'Node soft Delete'
+  requirements:
+    _permission: 'soft node delete access'
+    node: \d+
+
+node_trash_restore.form:
+  path: '/node/{node}/restore'
+  defaults:
+    _form: '\Drupal\node_trash\Form\NodeTrashRestoreConfirm'
+    _title: 'Node soft Delete'
+  requirements:
+    _permission: 'soft node delete access'
+    node: \d+
+
